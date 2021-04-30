@@ -7,13 +7,26 @@
   const toDoMultiDelete = document.querySelector('.toDo_multi_delete');
   const toDoList = document.querySelector('.toDo_list');
 
+  let list;
   const loadToDoList = () => {
-    let load = JSON.parse(localStorage.getItem(TODOLIST));
-    load.forEach((v, i) => {
+    list = JSON.parse(localStorage.getItem(TODOLIST));
+    list.forEach((v, i) => {
       v['id'] = i + 1;
-      v['checkList'] = false;
+      v['check'] = false;
       getToDoList(v);
     });
+  };
+
+  const toggleToDoList = (id) => {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i]['id'] === id) {
+        list[i]['check'] = !list[i]['check'];
+        break;
+      }
+    }
+  };
+  const deleteToDoList = (id) => {
+    document.getElementById(id).remove();
   };
   const getToDoList = (v) => {
     const { id, toDo, date } = v;
@@ -22,6 +35,7 @@
     div.className = 'toDo_list_item';
     const checkBox = document.createElement('input');
     checkBox.type = 'checkbox';
+    checkBox.addEventListener('click', () => toggleToDoList(id));
     div.append(checkBox);
     const textDiv = document.createElement('div');
     textDiv.className = 'text';
@@ -35,6 +49,7 @@
     deleteBtn.className = 'delete';
     deleteBtn.type = 'button';
     deleteBtn.value = '❌';
+    deleteBtn.addEventListener('click', () => deleteToDoList(id));
     div.append(deleteBtn);
     toDoList.append(div);
   };
